@@ -1,0 +1,171 @@
+.taskWindow {
+    -fx-border-color: black;
+    -fx-border-width: 0;
+    -fx-background-color: white;
+}
+
+.taskWindow > .viewport {
+    -fx-background-color: white;
+}
+
+.scroll-bar {
+    -fx-background-color: white;
+    -fx-border-color: white;
+    -fx-border-width: 0;
+}
+
+.scroll-bar:vertical .decrement-button {
+    -fx-background-color :transparent;
+    -fx-background-radius : 0.0em;
+    -fx-border-width: 0;
+    -fx-padding :0.0 0.0 10.0 0.0;
+
+}
+
+.scroll-bar:vertical .increment-button ,
+.scroll-bar:vertical .decrement-button {
+    -fx-background-color :transparent;
+    -fx-background-radius : 0.0em;
+    -fx-padding :0.0 10.0 0.0 0.0;
+
+}
+
+.scroll-bar .increment-arrow,
+.scroll-bar .decrement-arrow{
+    -fx-shape : " ";
+    -fx-padding :0.0 0.0;
+}
+
+.scroll-bar:vertical .increment-arrow,
+.scroll-bar:vertical .decrement-arrow{
+    -fx-shape : " ";
+    -fx-padding :0.0 0.0;
+}
+
+.scroll-bar:vertical .thumb {
+    -fx-background-color: derive(black,90.0%);
+    -fx-background-insets: 0.0, 0.0, 0.0;
+    -fx-background-radius: 5;
+}
+
+.scroll-bar:vertical .thumb:hover {
+    -fx-background-color :derive(#4D4C4F,10.0%);
+    -fx-background-insets : 0.0, 0.0, 0.0;
+    -fx-background-radius : 5;
+}
+
+.closeButton {
+    -fx-background-color: transparent, lightgrey, transparent, transparent;
+    -fx-background-radius: 0;
+    -fx-border-radius: 0;
+}
+
+.closeButton:hover {
+    -fx-background-color: transparent, red, transparent, transparent;
+    -fx-text-fill: white;
+    -fx-background-insets: 0 0;
+}
+
+.MainPane {
+    -fx-background-color: white;
+}
+
+.mainMenu {
+    -fx-background-color: transparent, lightgrey, transparent, transparent;
+}
+
+.exampleTask {
+    -fx-background-radius: 8;
+    -fx-background-color: lightgrey;
+    -fx-padding: 5;
+}
+
+.addTask {
+    -fx-background-color: white;
+    -fx-padding: 5;
+}
+
+.completeTask .box {
+    -fx-background-color: white;
+    -fx-background-radius: 10;
+    -fx-border-color: grey;
+    -fx-border-radius: 10;
+    -fx-background-insets: 0 0 0 0;
+}
+
+.completeTask .box:hover {
+    -fx-border-color: #424242;
+}
+
+.completeTask:selected .mark {
+    -fx-background-color: black;
+}
+
+.completeTask:selected .box {
+    -fx-background-color: grey;
+}
+
+.deleteTask {
+    -fx-background-color: lightgrey;
+    -fx-background-radius: 5;
+    -fx-border-width: 0;
+    -fx-border-radius: 5;
+}
+
+.deleteTask:hover {
+    -fx-background-color: #f7786a;
+}
+
+.addTaskBtn {
+    -fx-background-color: lightgrey;
+    -fx-background-radius: 5;
+    -fx-border-width: 0;
+    -fx-border-radius: 5;
+}
+
+.addTaskBtn:hover {
+    -fx-background-color: lightblue;
+}
+
+.taskDescription {
+    -fx-text-fill: #4f4f4f;
+    -fx-text-alignment: left;
+    -fx-font-size: 14;
+    -fx-border-color: lightgrey;
+    -fx-border-radius: 5;
+    -fx-padding: 0.0 5.0 0.0 5.0;
+}
+
+.taskDescription:hover {
+    -fx-border-color: grey;
+}
+
+.taskDate {
+    -fx-text-fill: #4f4f4f;
+    -fx-text-alignment: right;
+    -fx-font-size: 14;
+    -fx-border-color: lightgrey;
+    -fx-border-radius: 5;
+    -fx-padding: 0.0 5.0 0.0 5.0;
+}
+
+.taskDate:hover {
+    -fx-border-color: grey;
+}
+
+.editTaskDescription {
+    -fx-border-color: grey;
+    -fx-border-radius: 5;
+    -fx-background-color: white;
+    -fx-background-radius: 5;
+}
+
+.editTaskDate {
+    -fx-border-color: grey;
+    -fx-border-radius: 5;
+    -fx-background-color: white;
+    -fx-background-radius: 5;
+    -fx-background-insets: 0 0 0 0;
+}
+
+.editTaskDate

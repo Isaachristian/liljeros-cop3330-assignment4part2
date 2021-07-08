@@ -1,39 +1,80 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0"
-      style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.CheckMenuItem?>
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0"
+      prefWidth="600.0" styleClass="MainPane" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="ucf.assignments.TodoAppController">
-   <children>
-      <ScrollPane hbarPolicy="NEVER" prefHeight="370.0" prefWidth="200.0" vbarPolicy="ALWAYS">
-         <content>
-            <VBox prefHeight="500.0" prefWidth="185.0" style="-fx-background-color: white;" />
-         </content>
-      </ScrollPane>
-      <Button layoutY="370.0" maxHeight="-Infinity" mnemonicParsing="false" prefHeight="30.0" prefWidth="100.0" style="-fx-border-color: transparent, lightgrey, transparent, transparent; -fx-background-color: transparent, lightgrey, transparent, transparent; -fx-background-radius: 0;" text="Add List +" textAlignment="CENTER" />
-      <ChoiceBox layoutX="436.0" layoutY="14.0" prefWidth="150.0" />
-      <Label layoutX="389.0" layoutY="16.0" text="Show:">
-         <font>
-            <Font size="14.0" />
-         </font>
-      </Label>
-      <ScrollPane hbarPolicy="NEVER" layoutX="200.0" layoutY="50.0" prefHeight="320.0" prefWidth="400.0" vbarPolicy="ALWAYS">
-         <content>
-            <VBox prefHeight="500.0" prefWidth="385.0" style="-fx-background-color: white;" />
-         </content>
-      </ScrollPane>
-      <Button layoutX="542.0" layoutY="372.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="56.0" text="Button" />
-      <TextField layoutX="202.0" layoutY="372.0" prefHeight="26.0" prefWidth="216.0" />
-      <DatePicker layoutX="420.0" layoutY="372.0" prefHeight="26.0" prefWidth="120.0" />
-      <Button layoutX="100.0" layoutY="370.0" maxHeight="-Infinity" mnemonicParsing="false" prefHeight="30.0" prefWidth="100.0" style="-fx-border-color: transparent, lightblue, transparent, transparent; -fx-background-color: transparent, lightblue, transparent, transparent; -fx-background-radius: 0;" text="Import" textAlignment="CENTER" />
-   </children>
+    <children>
+        <HBox prefHeight="25" prefWidth="600" style="-fx-background-color: lightgrey">
+            <MenuBar translateX="25" layoutX="25.0" prefHeight="25.0" prefWidth="535.0" styleClass="mainMenu">
+                <menus>
+                    <Menu mnemonicParsing="false" text="File">
+                        <items>
+                            <MenuItem mnemonicParsing="false" text="Load List from Memory"/>
+                            <MenuItem mnemonicParsing="false" text="Save List to Memory"/>
+                        </items>
+                    </Menu>
+                    <Menu mnemonicParsing="false" text="Edit">
+                        <items>
+                            <MenuItem mnemonicParsing="false" text="Change List Name"/>
+                            <MenuItem mnemonicParsing="false" text="Clear All Items"/>
+                        </items>
+                    </Menu>
+                    <Menu mnemonicParsing="false" text="View">
+                        <CheckMenuItem mnemonicParsing="false" text="Show Complete"/>
+                        <CheckMenuItem mnemonicParsing="false" text="Show Incomplete"/>
+                        <CheckMenuItem mnemonicParsing="false" text="Show All"/>
+                    </Menu>
+                    <Menu mnemonicParsing="false" text="Help">
+                        <items>
+                            <MenuItem mnemonicParsing="false" text="Open Help Dialogue"/>
+                        </items>
+                    </Menu>
+                </menus>
+            </MenuBar>
+            <Button translateX="25" onAction="#onCloseClick" prefHeight="25.0" prefWidth="40.0"
+                    styleClass="closeButton" text="X" textAlignment="CENTER"/>
+        </HBox>
+        <ScrollPane hbarPolicy="NEVER" layoutY="25.0" prefHeight="335.0" prefWidth="600.0" style="-fx-padding: 15px;"
+                    styleClass="taskWindow" vbarPolicy="ALWAYS">
+            <content>
+                <VBox prefWidth="555.0">
+                    <HBox styleClass="exampleTask" prefHeight="40.0" prefWidth="555.0">
+                        <CheckBox styleClass="completeTask" translateX="5" translateY="5" prefHeight="20"
+                                  prefWidth="20"/>
+                        <Label styleClass="taskDescription" text="This is the task description" prefHeight="30"
+                               prefWidth="350" translateX="10"/>
+                        <Label styleClass="taskDate" text="YYYY-MM-DD" prefHeight="30" prefWidth="100" translateX="20"/>
+                        <Button styleClass="deleteTask" text="X" prefHeight="30" prefWidth="30" translateX="44"/>
+                    </HBox>
+                    <HBox prefHeight="5.0" prefWidth="555.0"/>
+                    <HBox styleClass="exampleTask" prefHeight="40.0" prefWidth="555.0">
+                        <CheckBox styleClass="completeTask" translateX="5" translateY="5" prefHeight="20" prefWidth="20"
+                                  disable="true"/>
+                        <TextField styleClass="editTaskDescription" prefHeight="30" prefWidth="350" translateX="10"/>
+                        <DatePicker styleClass="editTaskDate" prefHeight="30" prefWidth="100" translateX="20"/>
+                        <Button styleClass="deleteTask" text="X" prefHeight="30" prefWidth="30" translateX="44"/>
+                    </HBox>
+                </VBox>
+            </content>
+        </ScrollPane>
+        <HBox styleClass="addTask" prefHeight="40.0" prefWidth="600.0" translateY="360">
+            <Button styleClass="addTaskBtn" text="Add " prefHeight="30" prefWidth="60" translateX="5"/>
+            <TextField styleClass="editTaskDescription" prefHeight="30" prefWidth="400" translateX="10"/>
+            <DatePicker styleClass="editTaskDate" prefHeight="30" prefWidth="100" translateX="20"/>
+        </HBox>
+    </children>
 </Pane>

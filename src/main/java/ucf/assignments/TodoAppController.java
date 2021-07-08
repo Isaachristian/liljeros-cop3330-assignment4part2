@@ -5,8 +5,23 @@
 
 package ucf.assignments;
 
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.scene.control.Button;
+import javafx.stage.Stage;
+
 public class TodoAppController {
     private TodoList listInView;
+
+    @FXML
+    private void onCloseClick(ActionEvent e) {
+        // get the stage from the button
+        Button closeButton = (Button) e.getSource();
+        Stage stage = (Stage) closeButton.getScene().getWindow();
+
+        // Close the window from the stage
+        stage.close();
+    }
 
     private void changeListInView() {
         // change listInView to the current list that has been requested by the user
