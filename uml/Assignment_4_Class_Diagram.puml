@@ -1,0 +1,68 @@
+@startuml
+'https://plantuml.com/class-diagram
+
+enum Filter {
+    COMPLETE
+    INCOMPLETE
+    ALL
+}
+
+class TodoApp extends Application {
+    +void main()
+    +void start(Stage)
+}
+
+class TodoAppController {
+    TodoList listInView
+    +changeListInView()
+    +void addList()
+    +void removeList()
+    +void renameList()
+    +void addItem()
+    +void removeItem()
+    +void renameItem()
+    +void changeItemDueDate()
+    +void completeItem()
+    +void filterList()
+    +void exportItems()
+    +void importItems()
+}
+
+class TodoList {
+    -String listName
+    -TodoItems todoItems
+    +String getListName()
+    +void setListName(String)
+    +TodoItem[] getAll()
+    +TodoItem[] getComplete()
+    +TodoItem[] getIncomplete()
+    +void createItem(String, Date)
+    +void completeItem(int)
+    +void renameItem(int, String)
+    +void rescheduleItem(int Date)
+    +void deleteItem(int)
+}
+
+class TodoItem {
+    -String description
+    -Date dueDate
+    -Boolean isComplete
+    -int ID
+    +TodoItem(int)
+    +String getDescription()
+    +void setDescription(String)
+    +Date getDate()
+    +void setDate(Date)
+    +Boolean getIsComplete()
+    +void setIsComplete(Boolean)
+    +int getID()
+    +void setID(int)
+}
+
+
+TodoApp *-- TodoAppController
+TodoAppController o-- Filter
+TodoAppController *- TodoList
+TodoList *- TodoItem
+
+@enduml
