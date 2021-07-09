@@ -29,14 +29,16 @@
                     </Menu>
                     <Menu mnemonicParsing="false" text="Edit">
                         <items>
-                            <MenuItem mnemonicParsing="false" text="Change List Name"/>
                             <MenuItem mnemonicParsing="false" text="Clear All Items"/>
                         </items>
                     </Menu>
                     <Menu mnemonicParsing="false" text="View">
-                        <CheckMenuItem mnemonicParsing="false" text="Show Complete"/>
-                        <CheckMenuItem mnemonicParsing="false" text="Show Incomplete"/>
-                        <CheckMenuItem mnemonicParsing="false" text="Show All"/>
+                        <CheckMenuItem userData="0" mnemonicParsing="false" text="Show All"
+                                       onAction="#toggleFilter"/>
+                        <CheckMenuItem userData="1" mnemonicParsing="false" text="Show Complete"
+                                       onAction="#toggleFilter"/>
+                        <CheckMenuItem userData="2" mnemonicParsing="false" text="Show Incomplete"
+                                       onAction="#toggleFilter"/>
                     </Menu>
                     <Menu mnemonicParsing="false" text="Help">
                         <items>
@@ -48,10 +50,10 @@
             <Button translateX="25" onAction="#onCloseClick" prefHeight="25.0" prefWidth="40.0"
                     styleClass="closeButton" text="X" textAlignment="CENTER"/>
         </HBox>
-        <ScrollPane hbarPolicy="NEVER" layoutY="25.0" prefHeight="335.0" prefWidth="600.0" style="-fx-padding: 15px;"
+        <ScrollPane hbarPolicy="NEVER" layoutY="25.0" prefHeight="335.0" prefWidth="600.0"
                     styleClass="taskWindow" vbarPolicy="ALWAYS">
             <content>
-                <VBox prefWidth="555.0">
+                <VBox fx:id="TaskBox" prefWidth="555.0">
                     <HBox styleClass="exampleTask" prefHeight="40.0" prefWidth="555.0">
                         <CheckBox styleClass="completeTask" translateX="5" translateY="5" prefHeight="20"
                                   prefWidth="20"/>
@@ -72,7 +74,8 @@
             </content>
         </ScrollPane>
         <HBox styleClass="addTask" prefHeight="40.0" prefWidth="600.0" translateY="360">
-            <Button styleClass="addTaskBtn" text="Add " prefHeight="30" prefWidth="60" translateX="5"/>
+            <Button styleClass="addTaskBtn" text="Add " prefHeight="30" prefWidth="60" translateX="5"
+                    onAction="#addItem"/>
             <TextField styleClass="editTaskDescription" prefHeight="30" prefWidth="400" translateX="10"/>
             <DatePicker styleClass="editTaskDate" prefHeight="30" prefWidth="100" translateX="20"/>
         </HBox>

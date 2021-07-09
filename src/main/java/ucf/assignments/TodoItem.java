@@ -11,10 +11,12 @@ public class TodoItem {
     private String description;
     private Date dueDate;
     private Boolean isComplete;
-    private int ID;
 
-    public TodoItem(int ID) {
-        // set the unique ID of the task in the constructor
+    public TodoItem(String description, Date dueDate) {
+        // validate the item's description
+        // validate the items due date
+        // set the item's description
+        // set the item's due date
     }
 
     public String getDescription() {
@@ -22,8 +24,8 @@ public class TodoItem {
         return "";
     }
 
-    public void setDescription(String description) {
-        // make sure the string is not empty
+    public void setDescription(String description) throws IllegalArgumentException {
+        // ensure the string is between 1 and 256 characters
         // set the description
     }
 
@@ -32,8 +34,8 @@ public class TodoItem {
         return null;
     }
 
-    public void setDate(Date date) {
-        // make sure the date is valid (not past)
+    public void setDate(Date date) throws IllegalArgumentException {
+        // make sure the date is a valid Gregorian Calendar date
         // set the date
     }
 
@@ -42,17 +44,7 @@ public class TodoItem {
         return true;
     }
 
-    public void setIsComplete(Boolean isComplete) {
-        // set isComplete
+    public void toggleIsComplete() {
+        // toggle isComplete value
     }
-
-    public int getID() {
-        // return the ID
-        return 1;
-    }
-
-    public void setID(int ID) {
-        // list must do validation so assume this is the right value and set it
-    }
-
 }

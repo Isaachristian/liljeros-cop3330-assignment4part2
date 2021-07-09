@@ -2,6 +2,7 @@
     -fx-border-color: black;
     -fx-border-width: 0;
     -fx-background-color: white;
+    -fx-padding: 15px;
 }
 
 .taskWindow > .viewport {
@@ -18,22 +19,22 @@
     -fx-background-color :transparent;
     -fx-background-radius : 0.0em;
     -fx-border-width: 0;
-    -fx-padding :0.0 0.0 10.0 0.0;
+    -fx-padding: 0.0 0.0 10.0 0.0;
 
 }
 
 .scroll-bar:vertical .increment-button ,
 .scroll-bar:vertical .decrement-button {
-    -fx-background-color :transparent;
-    -fx-background-radius : 0.0em;
-    -fx-padding :0.0 10.0 0.0 0.0;
+    -fx-background-color: transparent;
+    -fx-background-radius: 0.0em;
+    -fx-padding: 0.0 10.0 0.0 0.0;
 
 }
 
 .scroll-bar .increment-arrow,
 .scroll-bar .decrement-arrow{
-    -fx-shape : " ";
-    -fx-padding :0.0 0.0;
+    -fx-shape: " ";
+    -fx-padding: 0.0 0.0;
 }
 
 .scroll-bar:vertical .increment-arrow,
@@ -167,5 +168,3 @@
     -fx-background-radius: 5;
     -fx-background-insets: 0 0 0 0;
 }
-
-.editTaskDate

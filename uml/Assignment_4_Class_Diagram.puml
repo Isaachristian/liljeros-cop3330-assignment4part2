@@ -1,68 +1,45 @@
 @startuml
 'https://plantuml.com/class-diagram
 
-enum Filter {
-    COMPLETE
-    INCOMPLETE
-    ALL
-}
-
 class TodoApp extends Application {
     +void main()
     +void start(Stage)
 }
 
-class TodoAppController {
-    TodoList listInView
-    +changeListInView()
-    +void addList()
-    +void removeList()
-    +void renameList()
+class TodoAppController implements Initializable {
+    -TodoItem[] todoItems
+    -TodoItem[] todoItemsInView
+    '0 = All, 1 = Complete only, 2 = Incomplete only
+    -int viewOption
+    +void initialize(URL, ResourceBundle)
+    +void onCloseClick(ActionEvent action)
+    +void redrawList()
+    +void toggleFilter(ActionEvent action)
     +void addItem()
     +void removeItem()
-    +void renameItem()
+    +void removeAllItems()
+    +void changeItemDescription()
     +void changeItemDueDate()
-    +void completeItem()
-    +void filterList()
-    +void exportItems()
+    +void toggleItemCompletion()
+    +void openHelpDialogue()
     +void importItems()
-}
-
-class TodoList {
-    -String listName
-    -TodoItems todoItems
-    +String getListName()
-    +void setListName(String)
-    +TodoItem[] getAll()
-    +TodoItem[] getComplete()
-    +TodoItem[] getIncomplete()
-    +void createItem(String, Date)
-    +void completeItem(int)
-    +void renameItem(int, String)
-    +void rescheduleItem(int Date)
-    +void deleteItem(int)
+    +void exportItems()
 }
 
 class TodoItem {
     -String description
     -Date dueDate
     -Boolean isComplete
-    -int ID
-    +TodoItem(int)
+    +TodoItem(String description, Date dueDate)
     +String getDescription()
     +void setDescription(String)
     +Date getDate()
     +void setDate(Date)
     +Boolean getIsComplete()
     +void setIsComplete(Boolean)
-    +int getID()
-    +void setID(int)
 }
 
-
 TodoApp *-- TodoAppController
-TodoAppController o-- Filter
-TodoAppController *- TodoList
-TodoList *- TodoItem
+TodoAppController *- TodoItem
 
 @enduml

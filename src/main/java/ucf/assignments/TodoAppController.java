@@ -8,66 +8,115 @@ package ucf.assignments;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
+import java.net.URL;
+import java.util.ResourceBundle;
+
 public class TodoAppController {
-    private TodoList listInView;
+    private TodoItem[] todoItems;
+    private TodoItem[] todoItemsInView;
 
     @FXML
-    private void onCloseClick(ActionEvent e) {
+    private VBox TaskBox;
+
+    @FXML
+    public void initialize(URL location, ResourceBundle resources) {
+        // set view setting to "Show All"
+    }
+
+    @FXML
+    private void onCloseClick(ActionEvent action) {
         // get the stage from the button
-        Button closeButton = (Button) e.getSource();
+        Button closeButton = (Button) action.getSource();
         Stage stage = (Stage) closeButton.getScene().getWindow();
 
         // Close the window from the stage
         stage.close();
     }
 
-    private void changeListInView() {
-        // change listInView to the current list that has been requested by the user
+    @FXML
+    public void toggleFilter(ActionEvent action) {
+        // check which filter called the method
+        // change global filter value
+        // unselect current filter
+        // select global filter value
+        // update items in view
+        // redraw todolist
     }
 
-    private void addList() {
-        // Call proper list
-        // switch to this list
+    @FXML
+    public void addItem(ActionEvent action) {
+        // try
+            // create a new item (this will handle the validation)
+            // add item to items in view list
+            // redraw todolist
+        // catch
+            // warn the user that the description or date is invalid
     }
 
-    private void removeList() {
-        // remove the list that called this
-        // switch to the top list
+    @FXML
+    private void removeItem(ActionEvent action) {
+        // get the index of the task that is being removed
+        // remove the item from the items in view
+        // redraw todolist
     }
 
-    private void renameList() {
-        // call the rename method on the listInView
+    @FXML
+    public void removeAllItems() {
+        // clear the items in view
+        // redraw the scene
     }
 
-    private void addItem() {
-        // call the add item method on listInView
-    }
-
-    private void removeItem() {
-        // determine the ID of the item to remove
-        // call the remove item method on the listInView using the ID
-    }
-
-    private void renameItem() {
-        // determine the ID of the item to rename
-        // call the rename item method on the listInView using the ID
+    private void changeItemDescription(ActionEvent action) {
+        // determine the index of the item that called this
+        // get the item
+        // switch its label to an input
+        // disable the items completion button
+        // onEnter try
+            // change the entries description
+            // redraw
+        // catch
+            // prompt the user the description must be 1-256 chars
     }
 
     private void changeItemDueDate() {
-        // determine the ID of the item to change the due date on
-        // call the change due date methode on the listInView using the ID
+        // determine the index of the item that called this
+        // get the item
+        // switch its label to an input
+        // disable the items completion button
+        // onEnter try
+            // change the entries description
+            // redraw
+        // catch
+            // prompt the user the description must be 1-256 chars
     }
 
-    private void completeItem() {
-        // determine the ID of the item to complete
-        // call the complete item method on the ListInView with the ID
+    private void toggleItemCompletion() {
+        // determine the index of the item that called this
+        // toggle that items completion
+        // redraw
     }
 
-    private void filterList() {
-        // get the selection of the filter dropdown
-        // call the filter method with the inputs selection
+    private void openHelpDialogue() { // NOTE: this may get replaced with a simple readme.md
+        // create a prompt with the help info in it
+        // remove when user closes dialog
+
+        // TODO: figure out how to load in another "view?" with help info
+    }
+
+    private void importItems() {
+        // open a file selector
+        // try
+            // use path from file to find file
+            // open file
+            // try
+                // put contents into the todoItems
+            // catch
+                // prompt: file not in proper format
+        // catch
+            // prompt: the desired file does not exist
     }
 
     private void exportItems() {
@@ -82,9 +131,4 @@ public class TodoAppController {
         // else
             // do the same thing but loop through every list in memory
     }
-
-    private void importItems() {
-        //
-    }
-
 }
