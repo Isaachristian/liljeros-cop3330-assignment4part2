@@ -8,6 +8,7 @@ package ucf.assignments;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.Menu;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
@@ -17,9 +18,10 @@ import java.util.ResourceBundle;
 public class TodoAppController {
     private TodoItem[] todoItems;
     private TodoItem[] todoItemsInView;
+    int currentFilter = 0;
 
-    @FXML
-    private VBox TaskBox;
+    @FXML private VBox TaskBox;
+    @FXML private Menu toggleFilterOptions;
 
     @FXML
     public void initialize(URL location, ResourceBundle resources) {

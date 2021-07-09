@@ -32,7 +32,7 @@
                             <MenuItem mnemonicParsing="false" text="Clear All Items"/>
                         </items>
                     </Menu>
-                    <Menu mnemonicParsing="false" text="View">
+                    <Menu fx:id="toggleFilterOptions" mnemonicParsing="false" text="View">
                         <CheckMenuItem userData="0" mnemonicParsing="false" text="Show All"
                                        onAction="#toggleFilter"/>
                         <CheckMenuItem userData="1" mnemonicParsing="false" text="Show Complete"
