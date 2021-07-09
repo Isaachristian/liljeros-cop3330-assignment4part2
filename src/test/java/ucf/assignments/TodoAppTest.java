@@ -1,4 +1,12 @@
+package ucf.assignments;
+
 import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
+
+import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
 
 public class TodoAppTest {
 
@@ -6,8 +14,13 @@ public class TodoAppTest {
     @Test
     void testAddItemToList() {
         // create a new list
+        List<TodoItem> TodoItems = new LinkedList<>();
+
         // add an item to the list
+        assertDoesNotThrow(() -> TodoItems.add(new TodoItem("Test task", new Date())));
+
         // expect the item to be present
+        assertNotNull(TodoItems.get(0));
     }
 
     // A user shall be able to remove an item from the list

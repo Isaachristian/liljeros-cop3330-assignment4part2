@@ -23,7 +23,7 @@ public class TodoApp extends Application {
         scene.getStylesheets().add(getClass().getResource("/AppStyle.css").toExternalForm());
         stage.setScene(scene);
         stage.setResizable(false);
-        stage.initStyle(StageStyle.UNDECORATED);
+//        stage.initStyle(StageStyle.UNDECORATED);
         stage.show();
     }
 }

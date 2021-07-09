@@ -6,22 +6,28 @@
 package ucf.assignments;
 
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.Menu;
+import javafx.scene.control.*;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.net.URL;
-import java.util.ResourceBundle;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.*;
 
 public class TodoAppController {
-    private TodoItem[] todoItems;
-    private TodoItem[] todoItemsInView;
+    final List<TodoItem> todoItems = new LinkedList<>();
+    private Set<TodoItem> todoItemsInView;
     int currentFilter = 0;
 
-    @FXML private VBox TaskBox;
+    @FXML private VBox taskBox;
     @FXML private Menu toggleFilterOptions;
+    @FXML private TextField addItemDescription;
+    @FXML private DatePicker addItemDate;
 
     @FXML
     public void initialize(URL location, ResourceBundle resources) {
@@ -49,17 +55,30 @@ public class TodoAppController {
     }
 
     @FXML
-    public void addItem(ActionEvent action) {
-        // try
-            // create a new item (this will handle the validation)
-            // add item to items in view list
-            // redraw todolist
-        // catch
-            // warn the user that the description or date is invalid
+    public void addItem() {
+        try {
+            // get item info
+            if (addItemDescription.getText() != null && addItemDate.getValue() != null) {
+                String description = addItemDescription.getText();
+                Date date = convertToDate(addItemDate.getValue());
+                // create a new item (this will handle the validation)
+                TodoItem todoItem = new TodoItem(description, date);
+                // add item to items in view list
+                todoItems.add(todoItem);
+                // redraw todolist
+                redrawApplication();
+            } else {
+                System.out.println("Something went wrong!");
+            }
+        } catch (IllegalArgumentException e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR,
+                    "The description should have 1 - 256 characters and the date should be filled in");
+        }
     }
 
     @FXML
-    private void removeItem(ActionEvent action) {
+    private void removeItem(Event event) {
+        System.out.println("remove item was run");
         // get the index of the task that is being removed
         // remove the item from the items in view
         // redraw todolist
@@ -71,7 +90,7 @@ public class TodoAppController {
         // redraw the scene
     }
 
-    private void changeItemDescription(ActionEvent action) {
+    private void changeItemDescription(Event event) {
         // determine the index of the item that called this
         // get the item
         // switch its label to an input
@@ -133,4 +152,75 @@ public class TodoAppController {
         // else
             // do the same thing but loop through every list in memory
     }
+
+    private void redrawApplication() {
+        // erase screen
+        taskBox.getChildren().clear();
+
+        // temporary: draws everything in the todolist
+        todoItems.forEach(this::drawTodoItem);
+    }
+
+    private void drawTodoItem(TodoItem todoItem) {
+        // Create a container for the todoItem and set its properties
+        HBox todoItemContainer = new HBox();
+        todoItemContainer.getStyleClass().add("exampleTask");
+        todoItemContainer.setPrefHeight(40.0);
+        todoItemContainer.setPrefWidth(555.0);
+
+        // Create a checkbox for the task
+        CheckBox checkBox = new CheckBox();
+        checkBox.getStyleClass().add("completeTask");
+        checkBox.setTranslateX(5.0);
+        checkBox.setTranslateY(5.0);
+        checkBox.setPrefHeight(20.0);
+        checkBox.setPrefWidth(20.0);
+
+        // Create a label for the description
+        Label descriptionLabel = new Label();
+        descriptionLabel.setText(todoItem.getDescription());
+        descriptionLabel.getStyleClass().add("taskDescription");
+        descriptionLabel.setPrefHeight(30.0);
+        descriptionLabel.setPrefWidth(350.0);
+        descriptionLabel.setTranslateX(10.0);
+
+        // Create a label for the date
+        Label dateLabel = new Label();
+        dateLabel.setText(todoItem.getDateAsString());
+        dateLabel.getStyleClass().add("taskDate");
+        dateLabel.setPrefHeight(30.0);
+        dateLabel.setPrefWidth(100);
+        dateLabel.setTranslateX(20);
+
+        // Create a button for deleting the task
+        Button deleteButton = new Button();
+        deleteButton.setText("X");
+        deleteButton.getStyleClass().add("deleteTask");
+        deleteButton.setPrefHeight(30.0);
+        deleteButton.setPrefWidth(30);
+        deleteButton.setTranslateX(44.0);
+        deleteButton.setOnMouseClicked(this::removeItem);
+
+        // Create a spacer task
+        HBox spacer = new HBox();
+        spacer.setPrefWidth(555.0);
+        spacer.setPrefHeight(5.0);
+
+        // Add the elements to the container
+        todoItemContainer.getChildren().addAll(checkBox, descriptionLabel, dateLabel, deleteButton);
+
+        // Add the container and spacer to the canvas
+        taskBox.getChildren().addAll(todoItemContainer, spacer);
+    }
+
+    private Date convertToDate(LocalDate localDate) {
+        // convert local date to date
+        return Date.from(Instant.from(localDate.atStartOfDay(ZoneId.systemDefault())));
+    }
+
+    private LocalDate convertToLocalDate(Date date) {
+        // convert date to local date
+        return date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+    }
+
 }

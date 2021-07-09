@@ -47,13 +47,13 @@
                     </Menu>
                 </menus>
             </MenuBar>
-            <Button translateX="25" onAction="#onCloseClick" prefHeight="25.0" prefWidth="40.0"
-                    styleClass="closeButton" text="X" textAlignment="CENTER"/>
+<!--            <Button translateX="25" onAction="#onCloseClick" prefHeight="25.0" prefWidth="40.0"-->
+<!--                    styleClass="closeButton" text="X" textAlignment="CENTER"/>-->
         </HBox>
         <ScrollPane hbarPolicy="NEVER" layoutY="25.0" prefHeight="335.0" prefWidth="600.0"
                     styleClass="taskWindow" vbarPolicy="ALWAYS">
             <content>
-                <VBox fx:id="TaskBox" prefWidth="555.0">
+                <VBox fx:id="taskBox" prefWidth="555.0">
                     <HBox styleClass="exampleTask" prefHeight="40.0" prefWidth="555.0">
                         <CheckBox styleClass="completeTask" translateX="5" translateY="5" prefHeight="20"
                                   prefWidth="20"/>
@@ -76,8 +76,8 @@
         <HBox styleClass="addTask" prefHeight="40.0" prefWidth="600.0" translateY="360">
             <Button styleClass="addTaskBtn" text="Add " prefHeight="30" prefWidth="60" translateX="5"
                     onAction="#addItem"/>
-            <TextField styleClass="editTaskDescription" prefHeight="30" prefWidth="400" translateX="10"/>
-            <DatePicker styleClass="editTaskDate" prefHeight="30" prefWidth="100" translateX="20"/>
+            <TextField fx:id="addItemDescription" styleClass="editTaskDescription" prefHeight="30" prefWidth="400" translateX="10"/>
+            <DatePicker fx:id="addItemDate" styleClass="editTaskDate" prefHeight="30" prefWidth="100" translateX="20"/>
         </HBox>
     </children>
 </Pane>
