@@ -19,6 +19,18 @@ public class TodoAppTest {
         // add an item to the list
         assertDoesNotThrow(() -> TodoItems.add(new TodoItem("Test task", new Date())));
 
+        // attempt to add an item with an illegal description
+        String longDescription = "This is a test of how many characters this piece of text has. This is a test of " +
+                "how many characters this piece of text has. This is a test of how many characters this piece of text" +
+                " has. This is a test of how many characters this piece of text has. This is a test of how many" +
+                " characters this piece of text has.";
+        assertThrows(IllegalArgumentException.class,
+                () -> TodoItems.add(new TodoItem(longDescription, new Date())));
+
+        // attempt to add an item with an illegal date
+        assertThrows(IllegalArgumentException.class,
+                () -> TodoItems.add(new TodoItem("Test test", null)));
+
         // expect the item to be present
         assertDoesNotThrow(() -> TodoItems.get(0));
     }
