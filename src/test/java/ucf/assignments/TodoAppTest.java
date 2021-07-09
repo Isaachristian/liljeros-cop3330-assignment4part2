@@ -20,17 +20,26 @@ public class TodoAppTest {
         assertDoesNotThrow(() -> TodoItems.add(new TodoItem("Test task", new Date())));
 
         // expect the item to be present
-        assertNotNull(TodoItems.get(0));
+        assertDoesNotThrow(() -> TodoItems.get(0));
     }
 
     // A user shall be able to remove an item from the list
     @Test
     void testRemoveItemFromList() {
-        // Create a new list
+        // create a new list
+        List<TodoItem> TodoItems = new LinkedList<>();
+
         // add an item to the list
-        // expect the item to be present
-        // remove an item from the list
-        // expect the list to be empty
+        TodoItems.add(new TodoItem("Test task", new Date()));
+
+        // assert the item to be present
+        assertDoesNotThrow(() -> TodoItems.get(0));
+
+        // remove the item from the list
+        TodoItems.remove(0);
+
+        // expect list to be empty
+        assertThrows(IndexOutOfBoundsException.class, () -> TodoItems.get(0));
     }
 
     // A user shall be able to clear the list of all items

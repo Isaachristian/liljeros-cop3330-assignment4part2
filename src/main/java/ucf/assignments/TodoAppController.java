@@ -78,10 +78,15 @@ public class TodoAppController {
 
     @FXML
     private void removeItem(Event event) {
-        System.out.println("remove item was run");
         // get the index of the task that is being removed
+        Button deleteButton = (Button) event.getSource();
+        int index = (Integer) deleteButton.getUserData();
+
         // remove the item from the items in view
+        todoItems.remove(index);
+
         // redraw todolist
+        redrawApplication();
     }
 
     @FXML
@@ -158,10 +163,12 @@ public class TodoAppController {
         taskBox.getChildren().clear();
 
         // temporary: draws everything in the todolist
-        todoItems.forEach(this::drawTodoItem);
+        int index = 0;
+        for (TodoItem todoItem : todoItems)
+            drawTodoItem(todoItem, index++);
     }
 
-    private void drawTodoItem(TodoItem todoItem) {
+    private void drawTodoItem(TodoItem todoItem, int index) {
         // Create a container for the todoItem and set its properties
         HBox todoItemContainer = new HBox();
         todoItemContainer.getStyleClass().add("exampleTask");
@@ -199,6 +206,7 @@ public class TodoAppController {
         deleteButton.setPrefHeight(30.0);
         deleteButton.setPrefWidth(30);
         deleteButton.setTranslateX(44.0);
+        deleteButton.setUserData(index);
         deleteButton.setOnMouseClicked(this::removeItem);
 
         // Create a spacer task

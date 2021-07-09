@@ -14,7 +14,7 @@ public class TodoItem {
     private Date dueDate;
     private Boolean isComplete;
 
-    public TodoItem(String description, Date dueDate) {
+    public TodoItem(String description, Date dueDate) throws IllegalArgumentException {
         // validate the item's description
         // validate the items due date
         if (description.length() > 0 && description.length() <= 256 && dueDate != null) {
@@ -22,6 +22,8 @@ public class TodoItem {
             this.description = description;
             // set the item's due date
             this.dueDate = dueDate;
+        } else {
+            throw new IllegalArgumentException("Date or description is invalid");
         }
     }
 
