@@ -60,10 +60,7 @@ public class TodoAppController implements Initializable {
         // unselect current filter
         toggleFilterOptions.getItems().stream()
                 .filter(item -> !item.getUserData().equals(currentFilter.toString()))
-                .forEach(item -> {
-                    System.out.println("made it here");
-                    ((CheckMenuItem) item).setSelected(false);
-                });
+                .forEach(item -> ((CheckMenuItem) item).setSelected(false));
 
         // redraw todolist
         redrawApplication();
@@ -266,7 +263,6 @@ public class TodoAppController implements Initializable {
     }
 
     List<TodoItem> getVisibleTodoItems(List<TodoItem> todoItems, int filter) throws IllegalArgumentException {
-        System.out.println(filter);
         // check value of filter
         // if 0
         if (filter == 0) {

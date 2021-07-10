@@ -167,7 +167,7 @@ public class TodoAppTest {
         // complete the second one
         todoItems.get(1).toggleIsComplete();
 
-        // assert: should show the first item
+        // assert: should show the second item
         assertEquals(1, tac.getVisibleTodoItems(todoItems, 1).size());
         assertEquals("Item 2", tac.getVisibleTodoItems(todoItems, 1).get(0).getDescription());
     }
@@ -176,9 +176,21 @@ public class TodoAppTest {
     @Test
     void testDisplayIncompleteTasks () {
         // create a todolist
+        List<TodoItem> todoItems = new LinkedList<>();
+
+        // create a new controller
+        TodoAppController tac = new TodoAppController();
+
         // add two items to the list
+        todoItems.add(new TodoItem("Item 1", new Date()));
+        todoItems.add(new TodoItem("Item 2", new Date()));
+
         // complete the second one
-        // expect: should show the second item
+        todoItems.get(1).toggleIsComplete();
+
+        // assert: should show the first item
+        assertEquals(1, tac.getVisibleTodoItems(todoItems, 2).size());
+        assertEquals("Item 1", tac.getVisibleTodoItems(todoItems, 2).get(0).getDescription());
     }
 
 
