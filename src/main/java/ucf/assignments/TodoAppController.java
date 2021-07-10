@@ -13,6 +13,7 @@ import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
@@ -97,57 +98,99 @@ public class TodoAppController implements Initializable {
         redrawApplication();
     }
 
-    private void changeItemDescription(KeyEvent event) {
+    private void changeItemDescriptionWithEnter(KeyEvent event) {
+        // if the key is enter
         if (event.getCode().equals(KeyCode.ENTER)) {
             // determine the index of the item that called this
             TextField textField = (TextField) event.getSource();
             int index = (Integer) textField.getUserData();
 
-            // get the item data
-            TodoItem todoItem = todoItems.get(index);
-
-            // try
-            try {
-                // change the entries description
-                todoItem.setDescription(textField.getText());
-                // switch its input to a label
-                todoItem.toggleEditingDescription();
-                // toggle is editing item
-                isEditingTodoItem = false;
-                // redraw
-                redrawApplication();
-            } catch (IllegalArgumentException e) {
-                // prompt the user the description must be 1-256 chars
-                Alert alert = new Alert(Alert.AlertType.ERROR, e.getMessage());
-                alert.show();
-            }
+            // call the changeItem
+            changeItemDescription(index, textField.getText());
         }
     }
 
-    private void changeItemDueDate(KeyEvent event) {
+    private void changeItemDescriptionWithConfirm(MouseEvent event) {
+        // get the index of the confirm button
+        Button button = (Button) event.getSource();
+        int index = (Integer) button.getUserData();
+
+        // handle spacers
+        int itemIndex = index == 0 ? 0 : 2 * index;
+
+        // get the description in the item being edited
+        TextField input = (TextField) ((HBox) taskBox.getChildren().get(itemIndex)).getChildren().get(1);
+        String description = input.getText();
+
+        // call change description
+        changeItemDescription(index, description);
+    }
+
+    private void changeItemDescription(int index, String description) {
+        // get the item data
+        TodoItem todoItem = todoItems.get(index);
+
+        // try
+        try {
+            // change the entries description
+            todoItem.setDescription(description);
+            // switch its input to a label
+            todoItem.toggleEditingDescription();
+            // toggle is editing item
+            isEditingTodoItem = false;
+            // redraw
+            redrawApplication();
+        } catch (IllegalArgumentException e) {
+            // prompt the user the description must be 1-256 chars
+            Alert alert = new Alert(Alert.AlertType.ERROR, e.getMessage());
+            alert.show();
+        }
+    }
+
+    private void changeItemDueDateWithEnter(KeyEvent event) {
         if (event.getCode().equals(KeyCode.ENTER)) {
             // determine the index of the item that called this
             DatePicker datePicker = (DatePicker) event.getSource();
             int index = (Integer) datePicker.getUserData();
 
-            // get the item data
-            TodoItem todoItem = todoItems.get(index);
+            // get date and call method to change date
+            changeItemDueDate(index, convertToDate(datePicker.getValue()));
+        }
+    }
 
-            // try
-            try {
-                // change the entries date
-                todoItem.setDate(convertToDate(datePicker.getValue()));
-                // switch its input to a label
-                todoItem.toggleEditingDate();
-                // toggle is editing item
-                isEditingTodoItem = false;
-                // redraw
-                redrawApplication();
-            } catch (IllegalArgumentException e) {
-                // prompt the user the description must be 1-256 chars
-                Alert alert = new Alert(Alert.AlertType.ERROR, e.getMessage());
-                alert.show();
-            }
+    private void changeItemDueDateWithConfirm(MouseEvent event) {
+        // get the index of the confirm button
+        Button button = (Button) event.getSource();
+        int index = (Integer) button.getUserData();
+
+        // handle spacers
+        int itemIndex = index == 0 ? 0 : 2 * index;
+
+        // get the description in the item being edited
+        DatePicker input = (DatePicker) ((HBox) taskBox.getChildren().get(itemIndex)).getChildren().get(2);
+        Date date = convertToDate(input.getValue());
+
+        changeItemDueDate(index, date);
+    }
+
+    private void changeItemDueDate(int index, Date date) {
+        // get the item data
+        TodoItem todoItem = todoItems.get(index);
+
+        // try
+        try {
+            // change the entries date
+            todoItem.setDate(date);
+            // switch its input to a label
+            todoItem.toggleEditingDate();
+            // toggle is editing item
+            isEditingTodoItem = false;
+            // redraw
+            redrawApplication();
+        } catch (IllegalArgumentException e) {
+            // prompt the user the description must be 1-256 chars
+            Alert alert = new Alert(Alert.AlertType.ERROR, e.getMessage());
+            alert.show();
         }
     }
 
@@ -254,7 +297,7 @@ public class TodoAppController implements Initializable {
             descriptionTextField.setPrefWidth(350.0);
             descriptionTextField.setTranslateX(10.0);
             descriptionTextField.setUserData(index);
-            descriptionTextField.setOnKeyPressed(this::changeItemDescription);
+            descriptionTextField.setOnKeyPressed(this::changeItemDescriptionWithEnter);
             todoItemContainer.getChildren().add(descriptionTextField);
         }
 
@@ -286,23 +329,45 @@ public class TodoAppController implements Initializable {
             datePicker.setUserData(index);
             datePicker.getEditor().setDisable(true);
             datePicker.getEditor().setOpacity(1);
-            datePicker.setOnKeyPressed(this::changeItemDueDate);
+            datePicker.setOnKeyPressed(this::changeItemDueDateWithEnter);
             todoItemContainer.getChildren().add(datePicker);
         }
 
         // Create a button for deleting the task
-        Button deleteButton = new Button();
-        deleteButton.setText("X");
-        deleteButton.getStyleClass().add("deleteTask");
-        deleteButton.setPrefHeight(30.0);
-        deleteButton.setPrefWidth(30);
-        deleteButton.setTranslateX(24.0);
-        deleteButton.setUserData(index);
-        deleteButton.setOnMouseClicked(this::removeItem);
+
         if (todoItem.getEditingDescription() || todoItem.getEditingDate()) {
-            deleteButton.setDisable(true);
+            Button confirmButton = new Button();
+            confirmButton.setText("\u2713");
+            confirmButton.getStyleClass().add("confirmTask");
+            confirmButton.setPrefHeight(30.0);
+            confirmButton.setPrefWidth(30);
+            confirmButton.setTranslateX(24.0);
+            confirmButton.setUserData(index);
+            confirmButton.setOnMouseClicked(event -> {
+                // get the index of the confirm button
+                int clickedIndex = (Integer) ((Button) event.getSource()).getUserData();
+
+                // check if the associated user item is being edited
+                if (todoItems.get(clickedIndex).getEditingDescription()) {
+                    // if editing description, save
+                    changeItemDescriptionWithConfirm(event);
+                } else if (todoItems.get(clickedIndex).getEditingDate()) {
+                    // if editing date, save
+                    changeItemDueDateWithConfirm(event);
+                }
+            });
+            todoItemContainer.getChildren().add(confirmButton);
+        } else {
+            Button deleteButton = new Button();
+            deleteButton.setText("X");
+            deleteButton.getStyleClass().add("deleteTask");
+            deleteButton.setPrefHeight(30.0);
+            deleteButton.setPrefWidth(30);
+            deleteButton.setTranslateX(24.0);
+            deleteButton.setUserData(index);
+            deleteButton.setOnMouseClicked(this::removeItem);
+            todoItemContainer.getChildren().add(deleteButton);
         }
-        todoItemContainer.getChildren().add(deleteButton);
 
         // Create a spacer task
         HBox spacer = new HBox();

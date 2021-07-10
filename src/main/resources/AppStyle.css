@@ -117,6 +117,17 @@
     -fx-background-color: #f7786a;
 }
 
+.confirmTask {
+    -fx-background-color: lightgrey;
+    -fx-background-radius: 5;
+    -fx-border-width: 0;
+    -fx-border-radius: 5;
+}
+
+.confirmTask:hover {
+    -fx-background-color: #95f792;
+}
+
 .addTaskBtn {
     -fx-background-color: lightgrey;
     -fx-background-radius: 5;
