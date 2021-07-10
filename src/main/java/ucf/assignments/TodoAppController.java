@@ -8,6 +8,8 @@ package ucf.assignments;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -20,7 +22,7 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.*;
 
-public class TodoAppController {
+public class TodoAppController implements Initializable {
     final List<TodoItem> todoItems = new LinkedList<>();
     private Set<TodoItem> todoItemsInView;
     int currentFilter = 0;
@@ -34,6 +36,11 @@ public class TodoAppController {
     @FXML
     public void initialize(URL location, ResourceBundle resources) {
         // set view setting to "Show All"
+
+        // set date to today by default
+        addItemDate.getEditor().setDisable(true);
+        addItemDate.getEditor().setOpacity(1);
+        addItemDate.setValue(convertToLocalDate(new Date()));
     }
 
     @FXML
@@ -117,16 +124,31 @@ public class TodoAppController {
         }
     }
 
-    private void changeItemDueDate() {
-        // determine the index of the item that called this
-        // get the item
-        // switch its label to an input
-        // disable the items completion button
-        // onEnter try
-            // change the entries description
-            // redraw
-        // catch
-            // prompt the user the description must be 1-256 chars
+    private void changeItemDueDate(KeyEvent event) {
+        if (event.getCode().equals(KeyCode.ENTER)) {
+            // determine the index of the item that called this
+            DatePicker datePicker = (DatePicker) event.getSource();
+            int index = (Integer) datePicker.getUserData();
+
+            // get the item data
+            TodoItem todoItem = todoItems.get(index);
+
+            // try
+            try {
+                // change the entries date
+                todoItem.setDate(convertToDate(datePicker.getValue()));
+                // switch its input to a label
+                todoItem.toggleEditingDate();
+                // toggle is editing item
+                isEditingTodoItem = false;
+                // redraw
+                redrawApplication();
+            } catch (IllegalArgumentException e) {
+                // prompt the user the description must be 1-256 chars
+                Alert alert = new Alert(Alert.AlertType.ERROR, e.getMessage());
+                alert.show();
+            }
+        }
     }
 
     private void toggleItemCompletion() {
@@ -193,7 +215,7 @@ public class TodoAppController {
         checkBox.setTranslateY(5.0);
         checkBox.setPrefHeight(20.0);
         checkBox.setPrefWidth(20.0);
-        if (todoItem.getEditingDescription()) {
+        if (todoItem.getEditingDescription() || todoItem.getEditingDate()) {
             checkBox.setDisable(true);
         }
         todoItemContainer.getChildren().add(checkBox);
@@ -232,10 +254,31 @@ public class TodoAppController {
             Label dateLabel = new Label();
             dateLabel.setText(todoItem.getDateAsString());
             dateLabel.getStyleClass().add("taskDate");
+            dateLabel.setAlignment(Pos.CENTER);
             dateLabel.setPrefHeight(30.0);
-            dateLabel.setPrefWidth(100);
-            dateLabel.setTranslateX(20);
+            dateLabel.setPrefWidth(120.0);
+            dateLabel.setTranslateX(20.0);
+            dateLabel.setOnMouseClicked(event -> {
+                if (!isEditingTodoItem) {
+                    todoItem.toggleEditingDate();
+                    isEditingTodoItem = true;
+                    redrawApplication();
+                }
+            });
             todoItemContainer.getChildren().add(dateLabel);
+        } else {
+            // Create a date picker for editing the date
+            DatePicker datePicker = new DatePicker();
+            datePicker.setValue(convertToLocalDate(todoItem.getDate()));
+            datePicker.getStyleClass().add("editTaskDate");
+            datePicker.setPrefHeight(30.0);
+            datePicker.setPrefWidth(120.0);
+            datePicker.setTranslateX(20.0);
+            datePicker.setUserData(index);
+            datePicker.getEditor().setDisable(true);
+            datePicker.getEditor().setOpacity(1);
+            datePicker.setOnKeyPressed(this::changeItemDueDate);
+            todoItemContainer.getChildren().add(datePicker);
         }
 
         // Create a button for deleting the task
@@ -244,10 +287,10 @@ public class TodoAppController {
         deleteButton.getStyleClass().add("deleteTask");
         deleteButton.setPrefHeight(30.0);
         deleteButton.setPrefWidth(30);
-        deleteButton.setTranslateX(44.0);
+        deleteButton.setTranslateX(24.0);
         deleteButton.setUserData(index);
         deleteButton.setOnMouseClicked(this::removeItem);
-        if (todoItem.getEditingDescription()) {
+        if (todoItem.getEditingDescription() || todoItem.getEditingDate()) {
             deleteButton.setDisable(true);
         }
         todoItemContainer.getChildren().add(deleteButton);

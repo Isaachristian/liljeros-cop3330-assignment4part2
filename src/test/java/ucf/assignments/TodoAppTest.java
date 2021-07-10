@@ -93,9 +93,20 @@ public class TodoAppTest {
     @Test
     void testChangingDueDateOfItem () {
         // Create a todolist
+        List<TodoItem> todoItems = new LinkedList<>();
+
         // add an item to it
+        todoItems.add(new TodoItem("Test item", new Date()));
+
         // change the date of the item
+        todoItems.get(0).toggleEditingDate();
+        Date date = new Date();
+        assertDoesNotThrow(() -> todoItems.get(0).setDate(date));
+        todoItems.get(0).toggleEditingDate();
+
         // expect the date to be the new date
+        assertEquals(date, todoItems.get(0).getDate());
+        assertFalse(todoItems.get(0).getEditingDate());
     }
 
     // A user shall be able to mark an item in the list as either complete or incomplete

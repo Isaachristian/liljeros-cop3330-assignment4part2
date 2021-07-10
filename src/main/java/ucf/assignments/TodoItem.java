@@ -55,7 +55,12 @@ public class TodoItem {
 
     public void setDate(Date date) throws IllegalArgumentException {
         // make sure the date is a valid Gregorian Calendar date
-        // set the date
+        if (date != null && isEditingDate) {
+            // set the date
+            dueDate = date;
+        } else {
+            throw new IllegalArgumentException("The date was null.");
+        }
     }
 
     public Boolean getIsComplete() {
