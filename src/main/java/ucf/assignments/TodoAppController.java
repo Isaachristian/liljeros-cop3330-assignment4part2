@@ -151,10 +151,16 @@ public class TodoAppController implements Initializable {
         }
     }
 
-    private void toggleItemCompletion() {
+    private void toggleItemCompletion(Event event) {
         // determine the index of the item that called this
+        CheckBox checkBox = (CheckBox) event.getSource();
+        int index = (Integer) checkBox.getUserData();
+
         // toggle that items completion
+        todoItems.get(index).toggleIsComplete();
+
         // redraw
+        redrawApplication();
     }
 
     private void openHelpDialogue() { // NOTE: this may get replaced with a simple readme.md
@@ -211,13 +217,16 @@ public class TodoAppController implements Initializable {
         // Create a checkbox for the task
         CheckBox checkBox = new CheckBox();
         checkBox.getStyleClass().add("completeTask");
+        checkBox.setSelected(todoItem.getIsComplete());
         checkBox.setTranslateX(5.0);
         checkBox.setTranslateY(5.0);
         checkBox.setPrefHeight(20.0);
         checkBox.setPrefWidth(20.0);
+        checkBox.setUserData(index);
         if (todoItem.getEditingDescription() || todoItem.getEditingDate()) {
             checkBox.setDisable(true);
         }
+        checkBox.setOnMouseClicked(this::toggleItemCompletion);
         todoItemContainer.getChildren().add(checkBox);
 
         if (!todoItem.getEditingDescription()) {

@@ -12,7 +12,7 @@ import java.util.Date;
 public class TodoItem {
     private String description;
     private Date dueDate;
-    private Boolean isComplete;
+    private Boolean isComplete = false;
     private Boolean isEditingDescription = false;
     private Boolean isEditingDate = false;
 
@@ -65,11 +65,12 @@ public class TodoItem {
 
     public Boolean getIsComplete() {
         // return isCompleted
-        return true;
+        return isComplete;
     }
 
     public void toggleIsComplete() {
         // toggle isComplete value
+        isComplete = !isComplete;
     }
 
     public Boolean getEditingDescription() {

@@ -113,11 +113,22 @@ public class TodoAppTest {
     @Test
     void testCompleteItem () {
         // create a todolist
+        List<TodoItem> todoItems = new LinkedList<>();
+
         // add an item
+        todoItems.add(new TodoItem("Test item", new Date()));
+
         // mark as complete
-        // expect: incomplete items should return empty
+        todoItems.get(0).toggleIsComplete();
+
+        // assert: should be complete
+        assertEquals(true, todoItems.get(0).getIsComplete());
+
         // mark as incomplete
+        todoItems.get(0).toggleIsComplete();
+
         // assert is incomplete
+        assertEquals(false, todoItems.get(0).getIsComplete());
     }
 
     // A user shall be able to display all of the existing items in the list
