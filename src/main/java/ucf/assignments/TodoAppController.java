@@ -26,7 +26,7 @@ import java.util.*;
 public class TodoAppController implements Initializable {
     final List<TodoItem> todoItems = new LinkedList<>();
     private Set<TodoItem> todoItemsInView;
-    int currentFilter = 0;
+    Integer currentFilter = 0;
     Boolean isEditingTodoItem = false;
 
     @FXML private VBox taskBox;
@@ -37,21 +37,36 @@ public class TodoAppController implements Initializable {
     @FXML
     public void initialize(URL location, ResourceBundle resources) {
         // set view setting to "Show All"
+        CheckMenuItem defaultItem = (CheckMenuItem) toggleFilterOptions.getItems().get(0);
+        defaultItem.setSelected(true);
 
         // set date to today by default
         addItemDate.getEditor().setDisable(true);
         addItemDate.getEditor().setOpacity(1);
         addItemDate.setValue(convertToLocalDate(new Date()));
+
+        // redraw application
+        redrawApplication();
     }
 
     @FXML
     public void toggleFilter(ActionEvent action) {
         // check which filter called the method
+        var userData = ((CheckMenuItem) action.getSource()).getUserData();
+
         // change global filter value
+        currentFilter = Integer.parseInt((String) userData);
+
         // unselect current filter
-        // select global filter value
-        // update items in view
+        toggleFilterOptions.getItems().stream()
+                .filter(item -> !item.getUserData().equals(currentFilter.toString()))
+                .forEach(item -> {
+                    System.out.println("made it here");
+                    ((CheckMenuItem) item).setSelected(false);
+                });
+
         // redraw todolist
+        redrawApplication();
     }
 
     @FXML
@@ -245,9 +260,34 @@ public class TodoAppController implements Initializable {
 
         // temporary: draws everything in the todolist
         int index = 0;
-        for (TodoItem todoItem : todoItems) {
+        for (TodoItem todoItem : getVisibleTodoItems(todoItems, currentFilter)) {
             drawTodoItem(todoItem, index++);
         }
+    }
+
+    List<TodoItem> getVisibleTodoItems(List<TodoItem> todoItems, int filter) throws IllegalArgumentException {
+        System.out.println(filter);
+        // check value of filter
+        // if 0
+        if (filter == 0) {
+            // return everything
+            return todoItems;
+        }
+
+        // if 1
+        if (filter == 1) {
+            // return complete
+            return todoItems.stream().filter(TodoItem::getIsComplete).toList();
+        }
+
+        // if 2
+        if (filter == 2) {
+            // return incomplete
+            return todoItems.stream().filter(TodoItem::getIsNotComplete).toList();
+        }
+
+        // throw illegal argument exception error?
+        throw new IllegalArgumentException("Filter must be 0, 1, or 2");
     }
 
     private void drawTodoItem(TodoItem todoItem, int index) {

@@ -135,9 +135,20 @@ public class TodoAppTest {
     @Test
     void testDisplayAllTasks () {
         // create a todolist
+        List<TodoItem> todoItems = new LinkedList<>();
+
+        // create a todoApp controller
+        TodoAppController tac = new TodoAppController();
+
         // add two items to the list
+        todoItems.add(new TodoItem("Item 1", new Date()));
+        todoItems.add(new TodoItem("Item 2", new Date()));
+
         // complete one
-        // expect: should be able to show all items
+        todoItems.get(1).toggleIsComplete();
+
+        // assert: should be able to show all items
+        assertEquals(2, tac.getVisibleTodoItems(todoItems, 0).size());
     }
 
     // A user shall be able to display only the incomplete items in the list

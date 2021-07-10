@@ -68,6 +68,11 @@ public class TodoItem {
         return isComplete;
     }
 
+    public Boolean getIsNotComplete() {
+        // return isCompelte negated
+        return !isComplete;
+    }
+
     public void toggleIsComplete() {
         // toggle isComplete value
         isComplete = !isComplete;
