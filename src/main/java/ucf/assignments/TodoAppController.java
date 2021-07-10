@@ -9,9 +9,10 @@ import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
 
 import java.net.URL;
 import java.time.Instant;
@@ -23,6 +24,7 @@ public class TodoAppController {
     final List<TodoItem> todoItems = new LinkedList<>();
     private Set<TodoItem> todoItemsInView;
     int currentFilter = 0;
+    Boolean isEditingTodoItem = false;
 
     @FXML private VBox taskBox;
     @FXML private Menu toggleFilterOptions;
@@ -33,16 +35,6 @@ public class TodoAppController {
     public void initialize(URL location, ResourceBundle resources) {
         // set view setting to "Show All"
     }
-
-//    @FXML
-//    private void onCloseClick(ActionEvent action) {
-//        // get the stage from the button
-//        Button closeButton = (Button) action.getSource();
-//        Stage stage = (Stage) closeButton.getScene().getWindow();
-//
-//        // Close the window from the stage
-//        stage.close();
-//    }
 
     @FXML
     public void toggleFilter(ActionEvent action) {
@@ -98,16 +90,31 @@ public class TodoAppController {
         redrawApplication();
     }
 
-    private void changeItemDescription(Event event) {
-        // determine the index of the item that called this
-        // get the item
-        // switch its label to an input
-        // disable the items completion button
-        // onEnter try
-            // change the entries description
-            // redraw
-        // catch
-            // prompt the user the description must be 1-256 chars
+    private void changeItemDescription(KeyEvent event) {
+        if (event.getCode().equals(KeyCode.ENTER)) {
+            // determine the index of the item that called this
+            TextField textField = (TextField) event.getSource();
+            int index = (Integer) textField.getUserData();
+
+            // get the item data
+            TodoItem todoItem = todoItems.get(index);
+
+            // try
+            try {
+                // change the entries description
+                todoItem.setDescription(textField.getText());
+                // switch its input to a label
+                todoItem.toggleEditingDescription();
+                // toggle is editing item
+                isEditingTodoItem = false;
+                // redraw
+                redrawApplication();
+            } catch (IllegalArgumentException e) {
+                // prompt the user the description must be 1-256 chars
+                Alert alert = new Alert(Alert.AlertType.ERROR, e.getMessage());
+                alert.show();
+            }
+        }
     }
 
     private void changeItemDueDate() {
@@ -167,8 +174,9 @@ public class TodoAppController {
 
         // temporary: draws everything in the todolist
         int index = 0;
-        for (TodoItem todoItem : todoItems)
+        for (TodoItem todoItem : todoItems) {
             drawTodoItem(todoItem, index++);
+        }
     }
 
     private void drawTodoItem(TodoItem todoItem, int index) {
@@ -185,22 +193,50 @@ public class TodoAppController {
         checkBox.setTranslateY(5.0);
         checkBox.setPrefHeight(20.0);
         checkBox.setPrefWidth(20.0);
+        if (todoItem.getEditingDescription()) {
+            checkBox.setDisable(true);
+        }
+        todoItemContainer.getChildren().add(checkBox);
 
-        // Create a label for the description
-        Label descriptionLabel = new Label();
-        descriptionLabel.setText(todoItem.getDescription());
-        descriptionLabel.getStyleClass().add("taskDescription");
-        descriptionLabel.setPrefHeight(30.0);
-        descriptionLabel.setPrefWidth(350.0);
-        descriptionLabel.setTranslateX(10.0);
+        if (!todoItem.getEditingDescription()) {
+            // Create a label for the description
+            Label descriptionLabel = new Label();
+            descriptionLabel.setText(todoItem.getDescription());
+            descriptionLabel.getStyleClass().add("taskDescription");
+            descriptionLabel.setPrefHeight(30.0);
+            descriptionLabel.setPrefWidth(350.0);
+            descriptionLabel.setTranslateX(10.0);
+            descriptionLabel.setOnMouseClicked(event -> {
+                if (!isEditingTodoItem) {
+                    isEditingTodoItem = true;
+                    todoItem.toggleEditingDescription();
+                    redrawApplication();
+                }
+            });
+            todoItemContainer.getChildren().add(descriptionLabel);
+        } else {
+            // Create a text field to edit the description
+            TextField descriptionTextField = new TextField();
+            descriptionTextField.setText(todoItem.getDescription());
+            descriptionTextField.getStyleClass().add("editTaskDescription");
+            descriptionTextField.setPrefHeight(30.0);
+            descriptionTextField.setPrefWidth(350.0);
+            descriptionTextField.setTranslateX(10.0);
+            descriptionTextField.setUserData(index);
+            descriptionTextField.setOnKeyPressed(this::changeItemDescription);
+            todoItemContainer.getChildren().add(descriptionTextField);
+        }
 
-        // Create a label for the date
-        Label dateLabel = new Label();
-        dateLabel.setText(todoItem.getDateAsString());
-        dateLabel.getStyleClass().add("taskDate");
-        dateLabel.setPrefHeight(30.0);
-        dateLabel.setPrefWidth(100);
-        dateLabel.setTranslateX(20);
+        if (!todoItem.getEditingDate()) {
+            // Create a label for the date
+            Label dateLabel = new Label();
+            dateLabel.setText(todoItem.getDateAsString());
+            dateLabel.getStyleClass().add("taskDate");
+            dateLabel.setPrefHeight(30.0);
+            dateLabel.setPrefWidth(100);
+            dateLabel.setTranslateX(20);
+            todoItemContainer.getChildren().add(dateLabel);
+        }
 
         // Create a button for deleting the task
         Button deleteButton = new Button();
@@ -211,14 +247,15 @@ public class TodoAppController {
         deleteButton.setTranslateX(44.0);
         deleteButton.setUserData(index);
         deleteButton.setOnMouseClicked(this::removeItem);
+        if (todoItem.getEditingDescription()) {
+            deleteButton.setDisable(true);
+        }
+        todoItemContainer.getChildren().add(deleteButton);
 
         // Create a spacer task
         HBox spacer = new HBox();
         spacer.setPrefWidth(555.0);
         spacer.setPrefHeight(5.0);
-
-        // Add the elements to the container
-        todoItemContainer.getChildren().addAll(checkBox, descriptionLabel, dateLabel, deleteButton);
 
         // Add the container and spacer to the canvas
         taskBox.getChildren().addAll(todoItemContainer, spacer);

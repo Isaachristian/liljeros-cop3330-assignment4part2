@@ -13,10 +13,11 @@ public class TodoItem {
     private String description;
     private Date dueDate;
     private Boolean isComplete;
+    private Boolean isEditingDescription = false;
+    private Boolean isEditingDate = false;
 
     public TodoItem(String description, Date dueDate) throws IllegalArgumentException {
-        // validate the item's description
-        // validate the items due date
+        // validate the item's description and due date
         if (description.length() > 0 && description.length() <= 256 && dueDate != null) {
             // set the item's description
             this.description = description;
@@ -34,12 +35,17 @@ public class TodoItem {
 
     public void setDescription(String description) throws IllegalArgumentException {
         // ensure the string is between 1 and 256 characters
-        // set the description
+        if (description != null && isEditingDescription && description.length() > 0 && description.length() <= 256) {
+            // set the description
+            this.description = description;
+        } else {
+            throw new IllegalArgumentException("The description must be between 1 and 256 characters.");
+        }
     }
 
     public Date getDate() {
         // return the task date
-        return null;
+        return this.dueDate;
     }
 
     public String getDateAsString() {
@@ -59,5 +65,21 @@ public class TodoItem {
 
     public void toggleIsComplete() {
         // toggle isComplete value
+    }
+
+    public Boolean getEditingDescription() {
+        return isEditingDescription;
+    }
+
+    public void toggleEditingDescription() {
+        isEditingDescription = !isEditingDescription;
+    }
+
+    public Boolean getEditingDate() {
+        return isEditingDate;
+    }
+
+    public void toggleEditingDate() {
+        isEditingDate = !isEditingDate;
     }
 }

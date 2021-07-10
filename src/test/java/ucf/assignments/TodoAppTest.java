@@ -74,9 +74,19 @@ public class TodoAppTest {
     @Test
     void testEditItemDescription () {
         // create a list
+        List<TodoItem> todoItems = new LinkedList<>();
+
         // add an item
+        todoItems.add(new TodoItem("Test item", new Date()));
+
         // edit the items description
-        // expect: the description to be the new one
+        todoItems.get(0).toggleEditingDescription();
+        assertDoesNotThrow(() -> todoItems.get(0).setDescription("This is the new description"));
+        todoItems.get(0).toggleEditingDescription();
+
+        // assert: the description to be the new one
+        assertEquals("This is the new description", todoItems.get(0).getDescription());
+        assertFalse(todoItems.get(0).getEditingDescription());
     }
 
     // A user shall be able to edit the due date of an item within the list
