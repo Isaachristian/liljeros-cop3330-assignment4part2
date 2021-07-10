@@ -34,15 +34,15 @@ public class TodoAppController {
         // set view setting to "Show All"
     }
 
-    @FXML
-    private void onCloseClick(ActionEvent action) {
-        // get the stage from the button
-        Button closeButton = (Button) action.getSource();
-        Stage stage = (Stage) closeButton.getScene().getWindow();
-
-        // Close the window from the stage
-        stage.close();
-    }
+//    @FXML
+//    private void onCloseClick(ActionEvent action) {
+//        // get the stage from the button
+//        Button closeButton = (Button) action.getSource();
+//        Stage stage = (Stage) closeButton.getScene().getWindow();
+//
+//        // Close the window from the stage
+//        stage.close();
+//    }
 
     @FXML
     public void toggleFilter(ActionEvent action) {
@@ -92,7 +92,10 @@ public class TodoAppController {
     @FXML
     public void removeAllItems() {
         // clear the items in view
+        todoItems.clear();
+
         // redraw the scene
+        redrawApplication();
     }
 
     private void changeItemDescription(Event event) {

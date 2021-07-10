@@ -6,7 +6,6 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
 
 public class TodoAppTest {
 
@@ -57,9 +56,18 @@ public class TodoAppTest {
     // A user shall be able to clear the list of all items
     @Test
     void testRemovingAllItems() {
+        // create a new list
+        List<TodoItem> TodoItems = new LinkedList<>();
+
         // add multiple items to the list
-        // call removeAll
-        // assert list should be empty
+        for (int i = 0; i < 5; i++)
+            TodoItems.add(new TodoItem("Test task", new Date()));
+
+        // clear the list of items
+        TodoItems.clear();
+
+        // expect list to be empty
+        assertEquals(0, TodoItems.size());
     }
 
     // A user shall be able to edit the description of an item within the list
