@@ -76,8 +76,8 @@
         <HBox styleClass="addTask" prefHeight="40.0" prefWidth="600.0" translateY="360">
             <Button styleClass="addTaskBtn" text="Add " prefHeight="30" prefWidth="60" translateX="5"
                     onAction="#addItem"/>
-            <TextField fx:id="addItemDescription" styleClass="editTaskDescription" prefHeight="30" prefWidth="400" translateX="10"/>
-            <DatePicker fx:id="addItemDate" styleClass="editTaskDate" prefHeight="30" prefWidth="100" translateX="20"/>
+            <TextField fx:id="addItemDescription" styleClass="editTaskDescription" prefHeight="30" prefWidth="380" translateX="10"/>
+            <DatePicker fx:id="addItemDate" styleClass="editTaskDate" prefHeight="30" prefWidth="120" translateX="20"/>
         </HBox>
     </children>
 </Pane>
