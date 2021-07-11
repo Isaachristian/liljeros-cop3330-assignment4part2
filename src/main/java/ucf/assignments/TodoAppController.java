@@ -254,7 +254,7 @@ public class TodoAppController implements Initializable {
         if (file != null) {
             System.out.println(file.getAbsolutePath());
             todoItems.clear();
-            todoItems = readFromFile(file);
+            readFromFile(file);
             redrawApplication();
         }
     }
@@ -302,31 +302,52 @@ public class TodoAppController implements Initializable {
         return sb.toString();
     }
 
-    public List<TodoItem> readFromFile(File file) {
-        List<TodoItem> todoItems = new LinkedList<>();
+    private void readFromFile(File file) {
         try {
             // open the file in a scanner
             Scanner scanner = new Scanner(file);
 
+            // create a list to hold the lines of the file
+            List<String> lines = new LinkedList<>();
+
             // while there are still lines
             while (scanner.hasNextLine()) {
-                // scan the next line
-                String task = scanner.nextLine();
-                // split the results
-                String[] todoItemPieces = task.split("!");
-                // parse the date back into a todoItem
-                SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM d hh:mm:ss z yyyy");
-                TodoItem todoItem = new TodoItem(todoItemPieces[1], sdf.parse(todoItemPieces[2]));
-                if (Integer.parseInt(todoItemPieces[0]) == 1) {
-                    todoItem.toggleIsComplete();
-                }
-                todoItems.add(todoItem);
+                lines.add(scanner.nextLine());
             }
+
+            // update todoitems with results from file parser
+            todoItems = parseFileInputs(lines);
+
             scanner.close();
         } catch (IOException | ParseException e) {
             Alert alert = new Alert(Alert.AlertType.ERROR, e.getMessage());
             alert.show();
         }
+    }
+
+    public List<TodoItem> parseFileInputs(List<String> todoItemStrings) throws ParseException {
+        List<TodoItem> todoItems = new LinkedList<>();
+
+        // for each todoitem
+        for (String todoItemString : todoItemStrings) {
+            // split the results (0 -> completion, 1 -> description, 2 -> date
+            String[] todoItemPieces = todoItemString.split("!");
+
+            // specify format for the date
+            SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM d hh:mm:ss z yyyy");
+
+            // parse the data back into a todoItem
+            TodoItem todoItem = new TodoItem(todoItemPieces[1], sdf.parse(todoItemPieces[2]));
+
+            // set complete if needed
+            if (Integer.parseInt(todoItemPieces[0]) == 1) {
+                todoItem.toggleIsComplete();
+            }
+
+            // add to the todoitems
+            todoItems.add(todoItem);
+        }
+
         return todoItems;
     }
 

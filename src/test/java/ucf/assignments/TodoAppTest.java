@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.File;
+import java.text.ParseException;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -220,9 +221,42 @@ public class TodoAppTest {
     // A user shall be able to load a list (and all of its items) from external storage
     @Test
     void testLoadSingleList () {
-        // create a todoapp
-        // load a file from the test recources folder
+        // create mock data
+        Date date = new Date();
+        List<String> fileContents = new LinkedList<>();
+        fileContents.add("0!Task 1!" + date + "\n");
+        fileContents.add("1!Task 2!" + date + "\n");
+        fileContents.add("0!Task 3!" + date + "\n");
+
+        // create expected results
+        List<TodoItem> todoItemsExpected = new LinkedList<>();
+        todoItemsExpected.add(new TodoItem("Task 1", date));
+        todoItemsExpected.add(new TodoItem("Task 2", date));
+        todoItemsExpected.add(new TodoItem("Task 3", date));
+        todoItemsExpected.get(1).toggleIsComplete();
+
+        // create a todolist
+        List<TodoItem> todoItems = new LinkedList<>();
+
+        // parse mock data into the
+        TodoAppController todoAppController = new TodoAppController();
+        assertDoesNotThrow(() ->  todoAppController.parseFileInputs(fileContents));
+
         // call the load function
+        try {
+            todoItems = todoAppController.parseFileInputs(fileContents);
+
+        } catch (ParseException e) {
+            System.out.println("something went wrong");
+        }
+
         // expect the todolist and items to match the file data
+        int index = 0;
+        for (TodoItem todoItem : todoItems) {
+            assertEquals(todoItemsExpected.get(index).getDateAsString(), todoItem.getDateAsString());
+            assertEquals(todoItemsExpected.get(index).getDescription(), todoItem.getDescription());
+            assertEquals(todoItemsExpected.get(index).getIsComplete(), todoItem.getIsComplete());
+            index++;
+        }
     }
 }
