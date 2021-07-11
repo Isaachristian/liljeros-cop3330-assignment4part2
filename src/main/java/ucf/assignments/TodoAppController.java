@@ -5,6 +5,7 @@
 
 package ucf.assignments;
 
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.fxml.FXML;
@@ -15,20 +16,30 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.stage.FileChooser;
+import javafx.util.converter.LocalDateStringConverter;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.net.URL;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.time.temporal.TemporalAccessor;
 import java.util.*;
 
 public class TodoAppController implements Initializable {
-    final List<TodoItem> todoItems = new LinkedList<>();
+    List<TodoItem> todoItems = new LinkedList<>();
     private Set<TodoItem> todoItemsInView;
     Integer currentFilter = 0;
     Boolean isEditingTodoItem = false;
 
+    @FXML private Pane mainPane;
     @FXML private VBox taskBox;
     @FXML private Menu toggleFilterOptions;
     @FXML private TextField addItemDescription;
@@ -67,6 +78,13 @@ public class TodoAppController implements Initializable {
     }
 
     @FXML
+    private void tryAddItem(KeyEvent event) {
+        if (event.getCode().equals(KeyCode.ENTER)) {
+            addItem();
+        }
+    }
+
+    @FXML
     public void addItem() {
         try {
             // get item info
@@ -77,6 +95,8 @@ public class TodoAppController implements Initializable {
                 TodoItem todoItem = new TodoItem(description, date);
                 // add item to items in view list
                 todoItems.add(todoItem);
+                // clear input
+                addItemDescription.clear();
                 // redraw todolist
                 redrawApplication();
             } else {
@@ -225,30 +245,89 @@ public class TodoAppController implements Initializable {
         // TODO: figure out how to load in another "view?" with help info
     }
 
-    private void importItems() {
+    @FXML
+    private void importItems(Event event) {
         // open a file selector
-        // try
-            // use path from file to find file
-            // open file
-            // try
-                // put contents into the todoItems
-            // catch
-                // prompt: file not in proper format
-        // catch
-            // prompt: the desired file does not exist
+        FileChooser fileChooser = new FileChooser();
+        File file = fileChooser.showOpenDialog(mainPane.getScene().getWindow());
+
+        if (file != null) {
+            System.out.println(file.getAbsolutePath());
+            todoItems.clear();
+            todoItems = readFromFile(file);
+            redrawApplication();
+        }
     }
 
+    @FXML
     private void exportItems() {
-        // get the selection from the user (whether current list or all)
         // create an output file to write to (with unique name)
-            // if name exists, add digit and increment by 1 till unique
-        // if current list
-            // take the list in view
-            // write the number of tasks and the name of the list on line 1
-            // write each task on its own line:
-            // [ID] [isComplete] [description] [YYY-MM-DD]
-        // else
-            // do the same thing but loop through every list in memory
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.getExtensionFilters()
+                .add(new FileChooser.ExtensionFilter("TestFiles", "*.txt"));
+        fileChooser.setInitialFileName("todolist.txt");
+        File file = fileChooser.showSaveDialog(mainPane.getScene().getWindow());
+
+        if (file != null) {
+            writeToFile(file);
+        }
+
+    }
+
+    private void writeToFile(File file) {
+        try {
+            if (file.createNewFile()) {
+                // write the number of tasks and the name of the list on line 1
+                FileWriter fileWriter = new FileWriter(file.getAbsolutePath());
+                fileWriter.write(generateFileContents(todoItems));
+                fileWriter.close();
+            }
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    public String generateFileContents(List<TodoItem> todoItems) {
+        // Create string to hold return value
+        StringBuilder sb = new StringBuilder();
+
+        // write each task on its own line:
+        // [ID] [isComplete] [description] [YYY-MM-DD]
+        for (TodoItem todoItem : todoItems) {
+            sb.append(String.format("%d!%s!%s\n",
+                    todoItem.getIsComplete() ? 1 : 0,
+                    todoItem.getDescription(),
+                    todoItem.getDate().toString()));
+        }
+        return sb.toString();
+    }
+
+    public List<TodoItem> readFromFile(File file) {
+        List<TodoItem> todoItems = new LinkedList<>();
+        try {
+            // open the file in a scanner
+            Scanner scanner = new Scanner(file);
+
+            // while there are still lines
+            while (scanner.hasNextLine()) {
+                // scan the next line
+                String task = scanner.nextLine();
+                // split the results
+                String[] todoItemPieces = task.split("!");
+                // parse the date back into a todoItem
+                SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM d hh:mm:ss z yyyy");
+                TodoItem todoItem = new TodoItem(todoItemPieces[1], sdf.parse(todoItemPieces[2]));
+                if (Integer.parseInt(todoItemPieces[0]) == 1) {
+                    todoItem.toggleIsComplete();
+                }
+                todoItems.add(todoItem);
+            }
+            scanner.close();
+        } catch (IOException | ParseException e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR, e.getMessage());
+            alert.show();
+        }
+        return todoItems;
     }
 
     private void redrawApplication() {
@@ -335,6 +414,11 @@ public class TodoAppController implements Initializable {
             descriptionTextField.setUserData(index);
             descriptionTextField.setOnKeyPressed(this::changeItemDescriptionWithEnter);
             todoItemContainer.getChildren().add(descriptionTextField);
+            Platform.runLater(() -> {
+                TextField textField = (TextField) todoItemContainer.getChildren().get(1);
+                textField.requestFocus();
+                textField.positionCaret(textField.getText().length());
+            });
         }
 
         if (!todoItem.getEditingDate()) {

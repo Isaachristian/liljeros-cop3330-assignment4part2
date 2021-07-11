@@ -3,6 +3,7 @@ package ucf.assignments;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.io.File;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -197,12 +198,23 @@ public class TodoAppTest {
     // A user shall be able to save the list (and all of its items) to external storage
     @Test
     void testSaveSingleList () {
+        // create a todolist
+        List<TodoItem> todoItems = new LinkedList<>();
+
+        // create a date option
+        Date date = new Date();
+
         // create a todoapp controller
-        // add two todolists
-        // add a different task to each todolist
-        // export the second todolist
-        // expect: the file to present
-        // expect: the contents to match the second todolists info
+        TodoAppController todoAppController = new TodoAppController();
+
+        // add task todolist
+        todoItems.add(new TodoItem("Task 1", date));
+
+        // export the todolist
+        String fileContents = todoAppController.generateFileContents(todoItems);
+
+        // assert: the file contents to be accurate
+        assertEquals("0!Task 1!" + date.toString() + "\n", fileContents);
     }
 
     // A user shall be able to load a list (and all of its items) from external storage

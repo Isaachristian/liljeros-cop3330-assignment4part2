@@ -16,15 +16,15 @@
 <?import javafx.scene.control.CheckMenuItem?>
 <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0"
       prefWidth="600.0" styleClass="MainPane" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="ucf.assignments.TodoAppController">
+      fx:controller="ucf.assignments.TodoAppController" fx:id="mainPane">
     <children>
-        <HBox prefHeight="25" prefWidth="600" style="-fx-background-color: lightgrey">
-            <MenuBar translateX="25" layoutX="25.0" prefHeight="25.0" prefWidth="535.0" styleClass="mainMenu">
+        <HBox prefHeight="20.0" prefWidth="600" style="-fx-background-color: lightgrey">
+            <MenuBar prefHeight="20.0" prefWidth="535.0" styleClass="mainMenu">
                 <menus>
                     <Menu mnemonicParsing="false" text="File">
                         <items>
-                            <MenuItem mnemonicParsing="false" text="Load List from Memory"/>
-                            <MenuItem mnemonicParsing="false" text="Save List to Memory"/>
+                            <MenuItem mnemonicParsing="false" text="Load List from Memory" onAction="#importItems"/>
+                            <MenuItem mnemonicParsing="false" text="Save List to Memory" onAction="#exportItems"/>
                         </items>
                     </Menu>
                     <Menu mnemonicParsing="false" text="Edit">
@@ -76,7 +76,8 @@
         <HBox styleClass="addTask" prefHeight="40.0" prefWidth="600.0" translateY="360">
             <Button styleClass="addTaskBtn" text="Add " prefHeight="30" prefWidth="60" translateX="5"
                     onAction="#addItem"/>
-            <TextField fx:id="addItemDescription" styleClass="editTaskDescription" prefHeight="30" prefWidth="380" translateX="10"/>
+            <TextField fx:id="addItemDescription" styleClass="editTaskDescription" prefHeight="30" prefWidth="380" translateX="10"
+                    onKeyPressed="#tryAddItem"/>
             <DatePicker fx:id="addItemDate" styleClass="editTaskDate" prefHeight="30" prefWidth="120" translateX="20"/>
         </HBox>
     </children>
